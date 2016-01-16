@@ -39,6 +39,6 @@ protected:
 	double* data;
 	int getIntPixelValue(cv::Mat mat, int row, int col);
 	void setIntPixelValue(cv::Mat &mat, int row, int col, int value);
-	int EW = 0;
+	int EW;
 };
 
