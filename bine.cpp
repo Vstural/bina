@@ -139,12 +139,6 @@ int getFontWidth(Mat mat) {
 
 int main()
 {
-	//Mat src = imread("test.jpg");
-	//Mat src = imread("sample.jpg");
-	//Mat src = imread("EWtest2.jpg");
-	//Mat src = imread("HW4.bmp");
-	//Mat src = imread("partofPR8.bmp");
-	//Mat src = imread("partofPR8.jpg");
 	Mat src = imread("test.png");
 
 	if (src.empty())
@@ -156,24 +150,16 @@ int main()
 	Mat gray;
 
 	cvtColor(src, gray, CV_BGR2GRAY);
-	imshow("Gray", gray);
 	//Canny
 	Mat canny;
 	Canny(gray, canny, 150, 60, 3);
-	imshow("Canny", canny);
 
 	Mymat grayM(gray);
 	//gradient and contrast
 	Mymat fig2aM(gray);
 
-	//////////////////////////////////////
-	//= 1;
-	//grayM.window = grayM.getEWfromCannyMat(canny);
-	//grayM.window = 1;
+	//get the windwos size by font width
 	grayM.window = getFontWidth(canny);
-	//cout << "grayM.window : " << getFontWidth(canny) << endl;
-	//////////////////////////////////////
-	
 	
 	Mymat fig2bM(gray.rows, gray.cols);
 
@@ -210,12 +196,9 @@ int main()
 	}
 	Mat fig2aMshow = gray.clone();
 	fig2aM.getMat(fig2aMshow);
-	imshow("fig2a gradient", fig2aMshow);
-
 
 	Mat fig2bMshow = gray.clone();
 	fig2bM.getMat(fig2bMshow);
-	imshow("contrast", fig2bMshow);
 
 	//C alpha
 	Mymat Calpha(gray.rows, gray.cols);
@@ -229,14 +212,10 @@ int main()
 	}
 	Mat Calphashow = gray.clone();
 	Calpha.getMat(Calphashow);
-	imshow("Calpha", Calphashow);
 
 	//Otsu's
 	Mat otsu;
-
 	threshold(Calphashow, otsu, 0, 255, THRESH_OTSU);
-	//reserve(otsu);
-	imshow("otsu", otsu);
 
 	//Combine
 	Mat comb = gray.clone();
@@ -245,7 +224,6 @@ int main()
 	//Mat connectRes = gray.clone();
 	//initMat(connectRes);
 	//connect(comb, connectRes);
-	imshow("combine", comb);	
 	
 	//Ger result
 	Mymat res(comb);
@@ -261,12 +239,10 @@ int main()
 
 			if (grayM.getPixel(i, j) <= (res.getMeanAverage(i, j) + (res.getStdAverage(i, j) / 2)))
 			{
-				//res.setPixel(i, j, 0);
 				setPixelValue(resshow, i, j, 255);
 			}
 			else
 			{
-				//res.setPixel(i, j, 210);
 				setPixelValue(resshow, i, j, 0);
 			}
 		}
@@ -274,10 +250,18 @@ int main()
 
 	//removeSinglePixel(resshow);
 	Mat resshow2 = gray.clone();
+
+	//the only different between res1 and res2
 	connect(resshow, resshow2);
-	removeSinglePixel(resshow2);
-	imshow("resshow",resshow);
+	//removeSinglePixel(resshow2);
+	///
+
+	imshow("res1show",resshow);
 	imshow("resshow2", resshow2);
+
+	Mat otsu2;
+	threshold(gray, otsu2, 0, 255, THRESH_OTSU);
+	imshow("byOTSU", otsu2);
 
 	waitKey();
 	return 0;
