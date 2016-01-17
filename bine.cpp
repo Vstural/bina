@@ -121,12 +121,12 @@ int main()
 		cout << "get image error" << endl;
 		return -1;
 	}
+
 	Mat gray;
 
 	cvtColor(src, gray, CV_BGR2GRAY);
 
-	//cvAdaptiveThreshold();
-	imshow("Gray", gray);
+	//imshow("Gray", gray);
 
 	/*
 	Mat gray;
@@ -216,18 +216,19 @@ int main()
 	imshow("Canny", canny);
 
 	Mymat grayM(gray);
-
 	//gradient and contrast
 	Mymat fig2aM(gray);
 	//////////////////////////////////////
 	//= 1;
-	grayM.window = grayM.getEWfromCannyMat(canny);
+	//grayM.window = grayM.getEWfromCannyMat(canny);
+	grayM.window = 1;
+	cout << "grayM.window : " << grayM.window << endl;
 	//////////////////////////////////////
 	
 	
 	Mymat fig2bM(gray.rows, gray.cols);
-	Mymat Imax(gray.rows, gray.cols);
-	Mymat Imin(gray.rows, gray.cols);
+	//Mymat Imax(gray.rows, gray.cols);
+	//Mymat Imin(gray.rows, gray.cols);
 
 	//for each pixel
 	for (int row = grayM.window; row < gray.rows - grayM.window; row++)
@@ -236,6 +237,7 @@ int main()
 		{
 			//do
 			//for pixel sourround it within size of windows
+			/*
 			int min = 255, max = 0;
 			for (int i = row - grayM.window; i < row + grayM.window; i++)
 			{
@@ -251,13 +253,19 @@ int main()
 					}
 				}
 			}
-			fig2aM.setPixel(row, col, max - min);
-
-			fig2bM.setPixel(row, col, 255*(max - min)
-				/ (max + min + 0.01));
+			*/
+			//fig2aM.setPixel(row, col, max - min);
+			fig2aM.setPixel(row, col, 
+				grayM.getintensityMax(row,col)- grayM.getintensityMin(row,col));
+			//cout << "Max Min :" << grayM.getintensityMax(row, col) << "   " << grayM.getintensityMin(row, col) << endl;
+			//getchar();
+			fig2bM.setPixel(row, col, 
+				(255*(grayM.getintensityMax(row, col) - grayM.getintensityMin(row, col)))
+				/ (grayM.getintensityMax(row, col) + grayM.getintensityMin(row, col) + 0.01));
 			//cout << fig2bM.getPixel(row, col) << endl;
 			//*/
 		}
+		//cout << "LINE" << endl;
 	}
 	Mat fig2aMshow = gray.clone();
 	fig2aM.getMat(fig2aMshow);

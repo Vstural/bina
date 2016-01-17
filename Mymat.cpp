@@ -111,7 +111,7 @@ double Mymat::getcijduc(int row, int col)
 {
 	return getintensityMax(row, col) - getintensityMin(row, col);
 }
-
+*/
 
 double Mymat::getintensityMax(int row, int col)
 {
@@ -145,6 +145,8 @@ double Mymat::getintensityMin(int row, int col)
 	return min;
 }
 
+
+/*
 double Mymat::getintensityMinMax(int row, int col,Mymat &matMin,Mymat matMax)
 {
 	int min = 255;
@@ -168,7 +170,6 @@ double Mymat::getintensityMinMax(int row, int col,Mymat &matMin,Mymat matMax)
 	return 0;
 }
 */
-
 double Mymat::getMeanAverage(int row, int col)
 {
 	double average = 0;

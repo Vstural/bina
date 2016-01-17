@@ -22,9 +22,9 @@ public:
 	double getcijduc(int row, int col);
 
 	/*define the windows of int getcij(int row,int col)
-
+	*/
 	double getintensityMax(int row, int col);
-	double getintensityMin(int row, int col);*/
+	double getintensityMin(int row, int col);
 	/*get mean average according window*/
 	double getMeanAverage(int row, int col);
 	double getStdAverage(int row, int col);
