@@ -15,6 +15,7 @@ Mymat::Mymat(cv::Mat graymat)
 	data = new double[rows*cols];
 	memset(Mymat::data, 0, sizeof(int));
 	init(graymat);
+	EW = 0;
 }
 
 Mymat::Mymat(int row ,int col)
@@ -23,7 +24,7 @@ Mymat::Mymat(int row ,int col)
 	Mymat::cols = col;
 	Mymat::rows = row;
 	memset(Mymat::data, 0, sizeof(int));
-	
+	EW = 0;
 	return;
 }
 
