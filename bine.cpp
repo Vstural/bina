@@ -22,6 +22,7 @@ void setPixelValue(Mat& mat, int row, int col, int value)
 }
 
 // require mat1 mat2 result have same rows and cols
+//only keep the pixel that both exist
 int myCombine(Mat &mat1, Mat &mat2,Mat& result)
 {
 	for (int i = 0; i < mat1.rows; i++)
@@ -29,6 +30,26 @@ int myCombine(Mat &mat1, Mat &mat2,Mat& result)
 		for (int j = 0; j < mat1.cols; j++)
 		{
 			if (getIntPixelValue(mat1, i, j) && getIntPixelValue(mat2, i, j))
+			{
+				setPixelValue(result, i, j, 255);
+			}
+			else
+			{
+				setPixelValue(result, i, j, 0);
+			}
+		}
+	}
+	return 0;
+}
+
+
+int myCombineOR(Mat &mat1, Mat &mat2, Mat& result)
+{
+	for (int i = 0; i < mat1.rows; i++)
+	{
+		for (int j = 0; j < mat1.cols; j++)
+		{
+			if (getIntPixelValue(mat1, i, j) || getIntPixelValue(mat2, i, j))
 			{
 				setPixelValue(result, i, j, 255);
 			}
@@ -103,7 +124,7 @@ void connect(Mat &mat,Mat &res)
 			}
 		}
 	}
-	myCombine(mat, res, res);
+	myCombineOR(mat, res, res);
 }
 
 int getFontWidth(Mat mat) {
@@ -139,7 +160,8 @@ int getFontWidth(Mat mat) {
 
 int main()
 {
-	Mat src = imread("test.png");
+	//Mat src = imread("docexp2.jpg");
+	Mat src = imread("test2.jpg");
 
 	if (src.empty())
 	{
@@ -218,15 +240,17 @@ int main()
 	threshold(Calphashow, otsu, 0, 255, THRESH_OTSU);
 
 	//Combine
-	Mat comb = gray.clone();
-	myCombine(canny, otsu, comb);
-	//removeSinglePixel(comb);
-	//Mat connectRes = gray.clone();
-	//initMat(connectRes);
-	//connect(comb, connectRes);
-	
+	Mat comb = otsu.clone();
+	//myCombine(canny, otsu, comb);
+	removeSinglePixel(comb);
+	Mat connectRes = gray.clone();
+	initMat(connectRes);
+	connect(comb, connectRes);
+	imshow("1", otsu);
+	imshow("2", comb);
+	imshow("3", connectRes);
 	//Ger result
-	Mymat res(comb);
+	Mymat res(connectRes);
 	grayM.window = 1;
 
 	Mat resshow = gray.clone();
@@ -249,20 +273,22 @@ int main()
 	}
 
 	//removeSinglePixel(resshow);
-	Mat resshow2 = gray.clone();
+	Mat resshow2 = resshow.clone();
 
-	//the only different between res1 and res2
+	//the only different between res1 and res2,resshow2 is after connect
 	connect(resshow, resshow2);
-	//removeSinglePixel(resshow2);
+	removeSinglePixel(resshow2);
 	///
-
+	reserve(resshow);
+	reserve(resshow2);
 	imshow("res1show",resshow);
 	imshow("resshow2", resshow2);
 
-	Mat otsu2;
-	threshold(gray, otsu2, 0, 255, THRESH_OTSU);
-	imshow("byOTSU", otsu2);
-
+	//Mat otsu2;
+	//threshold(gray, otsu2, 0, 255, THRESH_OTSU);
+	//imshow("byOTSU", otsu2);
+	imwrite("res1.jpg", resshow);
+	imwrite("res2.jpg", resshow2);
 	waitKey();
 	return 0;
 }
