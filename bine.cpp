@@ -160,8 +160,8 @@ int getFontWidth(Mat mat) {
 
 int main()
 {
-	//Mat src = imread("docexp2.jpg");
-	Mat src = imread("test2.jpg");
+	Mat src = imread("hw5.bmp");
+	//Mat src = imread("test2.jpg");
 
 	if (src.empty())
 	{
@@ -174,7 +174,7 @@ int main()
 	cvtColor(src, gray, CV_BGR2GRAY);
 	//Canny
 	Mat canny;
-	Canny(gray, canny, 150, 60, 3);
+	Canny(gray, canny, 300, 20, 5);
 
 	Mymat grayM(gray);
 	//gradient and contrast
