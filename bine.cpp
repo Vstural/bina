@@ -9,6 +9,21 @@
 using namespace cv;
 using namespace std;
 
+double t = 0;
+
+
+
+void tik() 
+{
+	t = (double)getTickCount();
+}
+void tok(String s)
+{
+	t = ((double)getTickCount() - t) / getTickFrequency();
+	cout<< s << " , " << "Times passed in seconds: " << t << endl;
+	t = (double)getTickCount();
+}
+
 int getIntPixelValue(Mat mat, int row, int col)
 {
 	//row col start from 0
@@ -160,7 +175,7 @@ int getFontWidth(Mat mat) {
 
 int main()
 {
-	//Mat src = imread("docexp2.jpg");
+	//Mat src = imread("HW4.bmp");
 	Mat src = imread("test2.jpg");
 
 	if (src.empty())
@@ -168,6 +183,8 @@ int main()
 		cout << "get image error" << endl;
 		return -1;
 	}
+
+	tik();
 
 	Mat gray;
 
@@ -234,17 +251,20 @@ int main()
 	}
 	Mat Calphashow = gray.clone();
 	Calpha.getMat(Calphashow);
-
+	tok("c alpah ");
 	//Otsu's
 	Mat otsu;
 	threshold(Calphashow, otsu, 0, 255, THRESH_OTSU);
+	tok("otsu");
 
 	//Combine
 	Mat comb = otsu.clone();
 	//myCombine(canny, otsu, comb);
 	removeSinglePixel(comb);
 	Mat connectRes = gray.clone();
+	tik();
 	initMat(connectRes);
+	tok("initmap");
 	connect(comb, connectRes);
 	imshow("1", otsu);
 	imshow("2", comb);
@@ -252,7 +272,7 @@ int main()
 	//Ger result
 	Mymat res(connectRes);
 	grayM.window = 1;
-
+	tok("connect");
 	Mat resshow = gray.clone();
 	res.getMat(resshow);
 	
@@ -271,16 +291,18 @@ int main()
 			}
 		}
 	}
-
+	tok("remove by algrothm");
 	//removeSinglePixel(resshow);
 	Mat resshow2 = resshow.clone();
 
 	//the only different between res1 and res2,resshow2 is after connect
 	connect(resshow, resshow2);
+	tok("connect once");
 	removeSinglePixel(resshow2);
 	///
 	reserve(resshow);
 	reserve(resshow2);
+	tok("reserve twice");
 	imshow("res1show",resshow);
 	imshow("resshow2", resshow2);
 
